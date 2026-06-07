@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <string>
 
-int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     wchar_t launcherPath[MAX_PATH];
     GetModuleFileNameW(NULL, launcherPath, MAX_PATH);
 
