@@ -1,0 +1,24 @@
+name: Build Launcher
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build launcher
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath`) do set VSINSTALL=%%i
+          call "%VSINSTALL%\Common7\Tools\VsDevCmd.bat" -arch=x64
+          cl /O2 /MT /DUNICODE /D_UNICODE /EHsc /Fe:"Your Game.exe" Launcher.cpp /link /SUBSYSTEM:WINDOWS
+
+      - name: Upload launcher
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-exe
+          path: Your Game.exe
