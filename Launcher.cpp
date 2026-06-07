@@ -1,9 +1,15 @@
 #include <windows.h>
 #include <string>
 
+#pragma comment(lib, "User32.lib")
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     wchar_t launcherPath[MAX_PATH];
-    GetModuleFileNameW(NULL, launcherPath, MAX_PATH);
+
+    if (!GetModuleFileNameW(NULL, launcherPath, MAX_PATH)) {
+        MessageBoxW(NULL, L"Could not find launcher path.", L"Launch Error", MB_ICONERROR);
+        return 1;
+    }
 
     std::wstring baseDir = launcherPath;
     size_t slash = baseDir.find_last_of(L"\\/");
@@ -38,5 +44,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+
     return 0;
 }
