@@ -8,17 +8,18 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out files
+        uses: actions/checkout@v5
 
       - name: Build launcher
         shell: cmd
         run: |
-          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath`) do set VSINSTALL=%%i
-          call "%VSINSTALL%\Common7\Tools\VsDevCmd.bat" -arch=x64
-          cl /O2 /MT /DUNICODE /D_UNICODE /EHsc /Fe:"Your Game.exe" Launcher.cpp /link /SUBSYSTEM:WINDOWS
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x64 -host_arch=x64
+          cl /nologo /O2 /MT /DUNICODE /D_UNICODE /EHsc Launcher.cpp /link /SUBSYSTEM:WINDOWS /OUT:"Your Game.exe"
+          if not exist "Your Game.exe" exit /b 1
 
       - name: Upload launcher
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: launcher-exe
           path: Your Game.exe
